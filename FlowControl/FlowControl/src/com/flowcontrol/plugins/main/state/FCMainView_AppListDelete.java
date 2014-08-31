@@ -20,7 +20,7 @@ public class FCMainView_AppListDelete extends FCMainViewBase {
 		mMainController.mMainListAdapter.showOrHiddenCheckBox(true);
 
 		if (mApp.getMainController().mMainListChang) {
-			mApp.getMainController().mInformationBeans = mApp.getLocationContext().getInformationTable().getAllInformation();
+			mApp.getMainController().mInformationBeans = mApp.getLocationContext().getAllInformation();
 		}
 		// mMainListAdapter = new MainListAdapter(mApp.getActivity(), mApp.getMainController().mInformationBeans, onClickInterface);
 		ListView mainList = (ListView) mApp.getActivity().findViewById(R.id.main_list);

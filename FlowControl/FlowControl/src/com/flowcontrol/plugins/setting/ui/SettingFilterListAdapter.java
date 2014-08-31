@@ -93,7 +93,7 @@ public class SettingFilterListAdapter extends BaseAdapter {
 			itemBean.mIsNotClean = false;// 不需要清除
 		}
 
-		FCLog.i("update isNotClean result=" + mApp.getLocationContext().getInformationTable().updateAppInformationUserFlow(itemBean));
+		FCLog.i("update isNotClean result=" + mApp.getLocationContext().updateAppInformationUserFlow(itemBean));
 	}
 
 	public final static class SettingFilterAdapterHolder {

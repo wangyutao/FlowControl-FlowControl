@@ -31,6 +31,12 @@ public class MainListAdapter extends BaseAdapter {
 		initData();
 	}
 
+	public void updata(List<MainInformationBean> beans) {
+		informationBeans = beans;
+		initData();
+		notifyDataSetChanged();
+	}
+
 	private void initData() {
 		List<MainInformationBean> beans = new ArrayList<MainInformationBean>();
 		for (int i = 0; i < informationBeans.size(); i++) {

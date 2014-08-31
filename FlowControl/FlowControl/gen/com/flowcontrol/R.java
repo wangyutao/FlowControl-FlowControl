@@ -22,6 +22,7 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
+        public static final int adsMogoView=0x7f080027;
         public static final int check_flow_spinner=0x7f080022;
         public static final int clean_checkbook=0x7f08000f;
         public static final int detail_back=0x7f080000;
@@ -79,7 +80,9 @@ public final class R {
         public static final int filter_detail=0x7f06000e;
         public static final int is_limit_flow=0x7f06000b;
         public static final int limit_flow=0x7f06000a;
+        public static final int loading=0x7f060010;
         public static final int main_view_top_prompt=0x7f060001;
+        public static final int mogo_app_id=0x7f06000f;
         public static final int name=0x7f060007;
         public static final int no_limit=0x7f06000d;
         public static final int refresh=0x7f06000c;

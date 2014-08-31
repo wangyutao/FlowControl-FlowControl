@@ -32,6 +32,7 @@ public class FCAppController extends Application {
 		mMainHandler = new Handler();
 
 		registerAll();
+		getMessageController().enable();
 	}
 
 	public FCAppController() {
@@ -43,6 +44,7 @@ public class FCAppController extends Application {
 		mMainHandler = new Handler();
 		mService = service;
 		registerAll();
+		getMessageController().enable();
 	}
 
 	public Activity getActivity() {

@@ -11,7 +11,6 @@ public class FCMessageController extends FCPlugin {
 
 	public FCMessageController(FCAppController app) {
 		super(app);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -23,15 +22,12 @@ public class FCMessageController extends FCPlugin {
 	public void enable() {
 		Activity activity = mApp.getActivity();
 		Intent intent = new Intent();
-		intent.setClass(activity, FCMessageService.class);
-
+		intent.setClass(activity, FCServiceState_Message.class);
 		activity.startService(intent);
 	}
 
 	@Override
 	public void disable() {
-		// TODO Auto-generated method stub
-
 	}
 
 }

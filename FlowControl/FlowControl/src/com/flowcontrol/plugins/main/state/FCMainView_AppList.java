@@ -23,7 +23,7 @@ public class FCMainView_AppList extends FCMainViewBase {
 	public void showView() {
 		mApp.getActivity().setContentView(R.layout.app_list);
 		if (mApp.getMainController().mMainListChang) {
-			mApp.getMainController().mInformationBeans = mApp.getLocationContext().getInformationTable().getAllInformation();
+			mApp.getMainController().mInformationBeans = mApp.getLocationContext().getAllInformation();
 		}
 
 		mMainController.mMainListAdapter = new MainListAdapter(mApp.getActivity(), mApp.getMainController().mInformationBeans, onClickInterface);
@@ -64,4 +64,15 @@ public class FCMainView_AppList extends FCMainViewBase {
 		}
 	};
 
+	public void refreshView() {
+		if (null != mMainController.mMainListAdapter) {
+			mApp.getMainHandler().post(new Runnable() {
+				@Override
+				public void run() {
+
+					mMainController.mMainListAdapter.updata(mApp.getMainController().mInformationBeans);
+				}
+			});
+		}
+	};
 }

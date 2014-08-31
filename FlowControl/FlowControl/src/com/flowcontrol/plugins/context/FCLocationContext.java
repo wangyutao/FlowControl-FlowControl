@@ -1,11 +1,14 @@
 package com.flowcontrol.plugins.context;
 
-import android.net.TrafficStats;
+import java.util.List;
 
 import com.flowcontrol.FCAppController;
 import com.flowcontrol.plugins.FCPlugin;
 import com.flowcontrol.plugins.db.FCDBHelper;
 import com.flowcontrol.plugins.db.FCDB_Information;
+import com.flowcontrol.plugins.db.FCDB_SetInfo;
+import com.flowcontrol.plugins.main.bean.MainInformationBean;
+import com.flowcontrol.plugins.setting.bean.FCSettingBean;
 
 public class FCLocationContext extends FCPlugin {
 	public static final String NAME = "context";
@@ -30,19 +33,43 @@ public class FCLocationContext extends FCPlugin {
 
 	}
 
-	public long getUserFlow(int uid) {
-		// 如果返回-1，代表不支持使用该方法，注意必须是2.2以上的
-		long rx = TrafficStats.getUidRxBytes(uid);
-		// 如果返回-1，代表不支持使用该方法，注意必须是2.2以上的
-		long tx = TrafficStats.getUidTxBytes(uid);
-		long userFlow = 0;
-		if ((rx + tx) > 0) {
-			userFlow = rx + tx;
-		}
-		return userFlow;
+	private FCDB_Information getInformationTable() {
+		return helper_.getAppInfoTable();
 	}
 
-	public FCDB_Information getInformationTable() {
-		return helper_.getInformation();
+	private FCDB_SetInfo getSetInfoTable() {
+		return helper_.getSetInfoTable();
+	}
+
+	// app info table
+	public List<MainInformationBean> getAllInformation() {
+		return getInformationTable().getAllInformation();
+	}
+
+	public boolean insertAppInformation(MainInformationBean informationBean) {
+		return getInformationTable().insertAppInformation(informationBean);
+	}
+
+	public int updateAppInformationLimitFlow(String appName, int appUid, long limitFlow) {
+		return getInformationTable().updateAppInformationLimitFlow(appName, appUid, limitFlow);
+	}
+
+	public int updateAppInformationUserFlow(MainInformationBean informationBean) {
+		return getInformationTable().updateAppInformationUserFlow(informationBean);
+	}
+
+	public MainInformationBean getAppInformation(String appName, int appUid) {
+		return getInformationTable().getAppInformation(appName, appUid);
+	}
+
+	// set info table
+
+	public void updateSettingInfo(Boolean isMessageRemind, Integer outOfFlow, Integer checkFlowMinute) {
+		FCSettingBean bean = new FCSettingBean(isMessageRemind, outOfFlow, checkFlowMinute);
+		getSetInfoTable().update(bean);
+	}
+
+	public FCSettingBean getSettingInfo() {
+		return getSetInfoTable().getSettingInfo();
 	}
 }

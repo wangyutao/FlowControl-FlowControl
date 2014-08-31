@@ -5,12 +5,12 @@ import java.util.List;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.TrafficStats;
 
 import com.flowcontrol.FCAppController;
+import com.flowcontrol.help.FFAppHelp;
 import com.flowcontrol.log_manager.FCLog;
 import com.flowcontrol.plugins.main.bean.MainInformationBean;
 
@@ -29,21 +29,19 @@ public class FCBootCompletedReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		FCAppController mApp = (FCAppController) context.getApplicationContext();
 
-		FCLog.i("FCBootCompletedReceiver onReceive=========");
-
 		if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {// 开机启动广播
-			//
+			FCLog.i("FCBootCompletedReceiver 开机启动广播=========");
 
-			Intent serviceIntent = new Intent(context, FCMessageService.class);
+			Intent serviceIntent = new Intent(context, FCServiceState_Message.class);
 			context.startService(serviceIntent);
 
 		} else if (Intent.ACTION_SHUTDOWN.equals(intent.getAction())) {// 关机广播
-			//
+			FCLog.i("FCBootCompletedReceiver 关机广播========");
 			List<PackageInfo> packs = context.getPackageManager().getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);
 
 			for (int i = 0; i < packs.size(); i++) {
 				PackageInfo p = packs.get(i);
-				if ((p.versionName == null) || !filterApp(p.applicationInfo)) {
+				if ((p.versionName == null) || !FFAppHelp.filterApp(p.applicationInfo)) {
 					continue;
 				}
 
@@ -62,9 +60,9 @@ public class FCBootCompletedReceiver extends BroadcastReceiver {
 					userFlow = rx + tx;
 				}
 
-				MainInformationBean databaseBean = mApp.getLocationContext().getInformationTable().getAppInformation(appname, uid);
+				MainInformationBean databaseBean = mApp.getLocationContext().getAppInformation(appname, uid);
 				databaseBean.mUserFlow = userFlow + databaseBean.mUserFlow;
-				int updateResult = mApp.getLocationContext().getInformationTable().updateAppInformationUserFlow(databaseBean);
+				int updateResult = mApp.getLocationContext().updateAppInformationUserFlow(databaseBean);
 				FCLog.i("updateResult=" + updateResult);
 				FCLog.i("手机即将关闭，需要 update 流量 appname=" + appname + " uid=" + uid + "  userFlow=" + userFlow + "  databaseBean.mUserFlow="
 						+ databaseBean.mUserFlow);
@@ -73,13 +71,4 @@ public class FCBootCompletedReceiver extends BroadcastReceiver {
 		}
 	}
 
-	public boolean filterApp(ApplicationInfo info) {
-		// 有些系统应用是可以更新的，如果用户自己下载了一个系统的应用来更新了原来的，它还是系统应用，这个就是判断这种情况的
-		if ((info.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-			return true;
-		} else if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {// 判断是不是系统应用
-			return true;
-		}
-		return false;
-	}
 }

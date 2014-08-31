@@ -13,4 +13,6 @@ public abstract class FCMainViewBase implements FCMainViewInterface {
 		mApp = controller;
 	}
 
+	public void refreshView() {
+	}
 }

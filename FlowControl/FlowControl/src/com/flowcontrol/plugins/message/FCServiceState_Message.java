@@ -8,7 +8,8 @@ import com.flowcontrol.FCAppController;
 import com.flowcontrol.log_manager.FCLog;
 import com.flowcontrol.plugins.context.FCLocationContext;
 
-public class FCMessageService extends Service {
+public class FCServiceState_Message extends Service {
+
 	FCAppController mAppController;
 	FCLocationContext mContext;
 

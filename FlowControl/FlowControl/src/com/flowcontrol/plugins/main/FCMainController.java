@@ -3,13 +3,14 @@ package com.flowcontrol.plugins.main;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.pm.ApplicationInfo;
+import android.app.ProgressDialog;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.TrafficStats;
 
 import com.flowcontrol.FCAppController;
 import com.flowcontrol.R;
+import com.flowcontrol.help.FFAppHelp;
 import com.flowcontrol.plugins.FCPlugin;
 import com.flowcontrol.plugins.main.bean.MainInformationBean;
 import com.flowcontrol.plugins.main.state.FCMainViewBase;
@@ -24,6 +25,7 @@ public class FCMainController extends FCPlugin {
 	FCMainViewBase mMainView;
 	public boolean mMainListChang = false;
 	public MainListAdapter mMainListAdapter;
+	protected ProgressDialog dialog_;
 
 	public FCMainController(FCAppController app) {
 		super(app);
@@ -37,10 +39,14 @@ public class FCMainController extends FCPlugin {
 
 	@Override
 	public void enable() {
+		dialog_ = new ProgressDialog(mApp.getActivity());
+		dialog_.setCancelable(false);
+		dialog_.setMessage(mApp.getResources().getString(R.string.loading));
 
-		mInformationBeans = mApp.getLocationContext().getInformationTable().getAllInformation();
+		mInformationBeans = mApp.getLocationContext().getAllInformation();
 		if (mInformationBeans.size() == 0) {
-			mInformationBeans = getInstalledApps();
+			showProgressDialog();
+			mApp.getMainController().getAppAllthread.start();
 		}
 		mMainView = new FCMainView_AppList(mApp);
 		showView();
@@ -50,7 +56,6 @@ public class FCMainController extends FCPlugin {
 
 		mApp.getMainHandler().post(new Runnable() {
 			public void run() {
-
 				mMainView.showView();
 			}
 		});
@@ -88,19 +93,37 @@ public class FCMainController extends FCPlugin {
 		}
 	}
 
+	protected void showProgressDialog() {
+		if (!dialog_.isShowing()) {
+			dialog_.show();
+		}
+	}
+
+	protected void dismissProgressDialog() {
+		if (dialog_.isShowing()) {
+			dialog_.dismiss();
+		}
+	}
+
+	Thread getAppAllthread = new Thread(new Runnable() {
+		public void run() {
+			getInstalledApps();
+		}
+	});
+
 	/**
 	 * 获取系统所有已安装的APP信息
 	 * 
 	 * @param getSysPackages
 	 * @return
 	 */
-	public static ArrayList<MainInformationBean> getInstalledApps() {
+	public ArrayList<MainInformationBean> getInstalledApps() {
 		ArrayList<MainInformationBean> beans = new ArrayList<MainInformationBean>();
 		List<PackageInfo> packs = mApp.getActivity().getPackageManager().getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);
 
 		for (int i = 0; i < packs.size(); i++) {
 			PackageInfo p = packs.get(i);
-			if ((p.versionName == null) || !filterApp(p.applicationInfo)) {
+			if ((p.versionName == null) || !FFAppHelp.filterApp(p.applicationInfo)) {
 				continue;
 			}
 
@@ -119,9 +142,9 @@ public class FCMainController extends FCPlugin {
 
 			MainInformationBean newInfo = new MainInformationBean(appname, true, pname, versionName, versionCode, uid, userFlow, 0);
 
-			boolean insertResult = mApp.getLocationContext().getInformationTable().insertAppInformation(newInfo);
+			boolean insertResult = mApp.getLocationContext().insertAppInformation(newInfo);
 			if (!insertResult) {// 说明不是新增的
-				MainInformationBean databaseBean = mApp.getLocationContext().getInformationTable().getAppInformation(appname, uid);
+				MainInformationBean databaseBean = mApp.getLocationContext().getAppInformation(appname, uid);
 				newInfo.mUserFlow = userFlow + databaseBean.mUserFlow;
 				newInfo.mLimitUserFlow = databaseBean.mLimitUserFlow;
 			}
@@ -129,20 +152,12 @@ public class FCMainController extends FCPlugin {
 			beans.add(newInfo);
 		}
 
-		return beans;
-	}
+		mInformationBeans = beans;
 
-	/**
-	 * 判断某一个应用程序是不是系统的应用程序， 如果是返回true，否则返回false。
-	 */
-	public static boolean filterApp(ApplicationInfo info) {
-		// 有些系统应用是可以更新的，如果用户自己下载了一个系统的应用来更新了原来的，它还是系统应用，这个就是判断这种情况的
-		if ((info.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-			return true;
-		} else if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {// 判断是不是系统应用
-			return true;
-		}
-		return false;
+		dismissProgressDialog();
+		mMainView.refreshView();
+		getAppAllthread.interrupt();
+		return beans;
 	}
 
 }

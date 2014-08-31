@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.flowcontrol.FCAppController;
 import com.flowcontrol.R;
+import com.flowcontrol.help.FFAppHelp;
 import com.flowcontrol.plugins.main.bean.MainInformationBean;
 
 public class FCMainView_Detail extends FCMainViewBase {
@@ -24,7 +25,7 @@ public class FCMainView_Detail extends FCMainViewBase {
 	public void showView() {
 		mApp.getActivity().setContentView(R.layout.app_detail);
 
-		long userFlow = mApp.getLocationContext().getUserFlow(mInformationBean.mUid);
+		long userFlow = FFAppHelp.getUserFlow(mInformationBean.mUid);
 		userFlow = userFlow + mInformationBean.mUserFlow;
 		String flow = Formatter.formatFileSize(mApp.getActivity(), userFlow);
 
@@ -41,7 +42,7 @@ public class FCMainView_Detail extends FCMainViewBase {
 		detail_refresh.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 
-				long userFlow = mApp.getLocationContext().getUserFlow(mInformationBean.mUid);
+				long userFlow = FFAppHelp.getUserFlow(mInformationBean.mUid);
 				userFlow = userFlow + mInformationBean.mUserFlow;
 				String flow = Formatter.formatFileSize(mApp.getActivity(), userFlow);
 				((TextView) mApp.getActivity().findViewById(R.id.user_flow)).setText("" + flow);
@@ -81,8 +82,7 @@ public class FCMainView_Detail extends FCMainViewBase {
 
 					return;
 				} else {
-					mApp.getLocationContext().getInformationTable()
-							.updateAppInformationLimitFlow(mInformationBean.mAppName, mInformationBean.mUid, limit);
+					mApp.getLocationContext().updateAppInformationLimitFlow(mInformationBean.mAppName, mInformationBean.mUid, limit);
 					mApp.getMainController().mMainListChang = true;
 					mFirstInto = false;
 				}

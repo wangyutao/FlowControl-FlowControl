@@ -27,7 +27,7 @@ public class FCSettingControll extends FCPlugin {
 
 	@Override
 	public void enable() {
-		mInformationBeans = mApp.getLocationContext().getInformationTable().getAllInformation();
+		mInformationBeans = mApp.getLocationContext().getAllInformation();
 		toSettingMainPage();
 	}
 
@@ -45,7 +45,7 @@ public class FCSettingControll extends FCPlugin {
 	}
 
 	public void toSettingMainPage() {
-		mInformationBeans = mApp.getLocationContext().getInformationTable().getAllInformation();
+		mInformationBeans = mApp.getLocationContext().getAllInformation();
 		mCurrentStateBase = new FCSetting_MainView(mApp);
 		showView();
 	}
