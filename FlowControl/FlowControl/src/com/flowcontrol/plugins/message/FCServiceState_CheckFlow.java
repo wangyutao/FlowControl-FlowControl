@@ -10,9 +10,10 @@ import com.flowcontrol.FCAppController;
 import com.flowcontrol.log_manager.FCLog;
 import com.flowcontrol.plugins.setting.bean.FCSettingBean;
 
-public class FCSeviceState_CheckFlow extends Service {
+public class FCServiceState_CheckFlow extends Service {
 
 	Integer checkTime_ = null;
+	Integer overstepFlow_ = null;
 	final int handlerMessageIndex_ = 0;
 
 	@Override
@@ -22,6 +23,7 @@ public class FCSeviceState_CheckFlow extends Service {
 		FCAppController app = (FCAppController) this.getApplication();
 		FCSettingBean bean = app.getLocationContext().getSettingInfo();
 		checkTime_ = bean.mCheckFlowMinute;
+		overstepFlow_ = bean.mOverstepFlow;
 
 		startCheckHandler();
 
@@ -54,8 +56,12 @@ public class FCSeviceState_CheckFlow extends Service {
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			// do something
 			FCLog.i("check flow..... checkTime_=" + checkTime_);
+			// TODO 根据设置的流量限制百分比，进行监控
+
+			if (overstepFlow_ != null) {
+				checkFlow();
+			}
 
 			Message message = handler.obtainMessage(handlerMessageIndex_);
 			if (checkTime_ != null) {
@@ -63,5 +69,9 @@ public class FCSeviceState_CheckFlow extends Service {
 			}
 		}
 	};
+
+	private void checkFlow() {
+
+	}
 
 }

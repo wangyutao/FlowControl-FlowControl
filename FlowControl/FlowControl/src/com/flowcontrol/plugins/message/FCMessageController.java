@@ -1,6 +1,5 @@
 package com.flowcontrol.plugins.message;
 
-import android.app.Activity;
 import android.content.Intent;
 
 import com.flowcontrol.FCAppController;
@@ -20,10 +19,8 @@ public class FCMessageController extends FCPlugin {
 
 	@Override
 	public void enable() {
-		Activity activity = mApp.getActivity();
-		Intent intent = new Intent();
-		intent.setClass(activity, FCServiceState_Message.class);
-		activity.startService(intent);
+		mApp.startService(new Intent(mApp, FCServiceState_Message.class));
+		mApp.startService(new Intent(mApp, FCServiceState_CheckFlow.class));
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import com.flowcontrol.R;
 
 public class FCSettingBean {
 	public Boolean mIsMessageRemind;// 是否消息提醒
-	public Integer mOutOfFlow;// 超过流量提醒
+	public Integer mOverstepFlow;// 超过流量提醒
 	public Integer mCheckFlowMinute;// 隔几分钟检测
 
 	/**
@@ -19,7 +19,7 @@ public class FCSettingBean {
 	 */
 	public FCSettingBean(Boolean isMessageRemind, Integer outOfFlow, Integer checkFlowMinute) {
 		mIsMessageRemind = isMessageRemind;
-		mOutOfFlow = outOfFlow;
+		mOverstepFlow = outOfFlow;
 		mCheckFlowMinute = checkFlowMinute;
 	}
 

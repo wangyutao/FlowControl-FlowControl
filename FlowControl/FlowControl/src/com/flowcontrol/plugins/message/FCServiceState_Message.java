@@ -24,7 +24,7 @@ public class FCServiceState_Message extends Service {
 		super.onCreate();
 		FCLog.i("FCMessageService  onCreate");
 
-		mAppController = new FCAppController(this);
+		mAppController = (FCAppController) this.getApplication();
 		mAppController.mService = this;
 		mContext = mAppController.getLocationContext();
 		mContext.enable();

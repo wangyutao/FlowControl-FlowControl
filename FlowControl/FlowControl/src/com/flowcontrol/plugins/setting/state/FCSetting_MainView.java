@@ -62,8 +62,8 @@ public class FCSetting_MainView extends FCSettingBase {
 			flowSpinner_.setSelection(position);
 		}
 
-		if (bean.mOutOfFlow != null) {
-			int position = FCSettingBean.getOutOfFlowPosition(mApp, bean.mOutOfFlow);
+		if (bean.mOverstepFlow != null) {
+			int position = FCSettingBean.getOutOfFlowPosition(mApp, bean.mOverstepFlow);
 			checkFlowSpinner_.setSelection(position);
 		}
 	}

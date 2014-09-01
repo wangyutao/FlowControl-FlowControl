@@ -26,8 +26,8 @@ public class FCDB_SetInfo extends FCDBBase {
 		if (info.mCheckFlowMinute != null) {
 			values.put(COLUMN_Check_Time, info.mCheckFlowMinute);
 		}
-		if (info.mOutOfFlow != null) {
-			values.put(COLUMN_Use_Flow, info.mOutOfFlow);
+		if (info.mOverstepFlow != null) {
+			values.put(COLUMN_Use_Flow, info.mOverstepFlow);
 		}
 		return values;
 	}

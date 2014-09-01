@@ -28,11 +28,15 @@ public class FCBootCompletedReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		FCAppController mApp = (FCAppController) context.getApplicationContext();
+		FCLog.i("FCBootCompletedReceiver  ");
 
 		if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {// 开机启动广播
 			FCLog.i("FCBootCompletedReceiver 开机启动广播=========");
 
 			Intent serviceIntent = new Intent(context, FCServiceState_Message.class);
+			context.startService(serviceIntent);
+
+			serviceIntent = new Intent(context, FCServiceState_CheckFlow.class);
 			context.startService(serviceIntent);
 
 		} else if (Intent.ACTION_SHUTDOWN.equals(intent.getAction())) {// 关机广播
